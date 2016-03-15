@@ -81,6 +81,37 @@ trait ActiveRecordTrait
     }
 
     /**
+     * Saves the current record.
+     *
+     * This method will call [[insert()]] when [[isNewRecord]] is true, or [[update()]]
+     * when [[isNewRecord]] is false.
+     *
+     * For example, to save a customer record:
+     *
+     * ```php
+     * $customer = new Customer; // or $customer = Customer::findOne($id);
+     * $customer->name = $name;
+     * $customer->email = $email;
+     * $customer->save();
+     * ```
+     *
+     * @param boolean $runValidation whether to perform validation (calling [[validate()]])
+     * before saving the record. Defaults to `true`. If the validation fails, the record
+     * will not be saved to the database and this method will return `false`.
+     * @param array $attributeNames list of attribute names that need to be saved. Defaults to null,
+     * meaning all attributes that are loaded from DB will be saved.
+     * @return boolean whether the saving succeeded (i.e. no validation errors occurred).
+     */
+    public function save($runValidation = true, $attributeNames = null)
+    {
+        if (parent::save($runValidation, $attributeNames) === false) {
+            return false;
+        }
+        static::addRowToMap($this);
+        return true;
+    }
+
+    /**
      * Add a one row to identity map
      * @param ActiveRecord | array $row
      */

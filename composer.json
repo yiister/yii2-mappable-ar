@@ -34,5 +34,8 @@
     "psr-4": {
       "yiister\\mappable\\": ""
     }
+  },
+  "require-dev": {
+    "yiisoft/yii2-codeception": "^2.0"
   }
 }

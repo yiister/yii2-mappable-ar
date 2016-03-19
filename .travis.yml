@@ -6,7 +6,7 @@ php:
   - 7.0
 
 install:
-  - travis_retry composer self-update
+  - travis_retry composer global self-update
   - travis_retry composer global require "codeception/codeception:2.0.*@dev"
   - travis_retry composer global require fxp/composer-asset-plugin:~1.1.1
   - travis_retry composer install --prefer-dist --dev

@@ -15,7 +15,7 @@ use yii\db\ActiveRecord;
 trait ActiveRecordTrait
 {
     /** @var array List of loaded db rows. Key is a unique db field value. Value is an array of AR attributes */
-    public static $identityMap = [];
+    protected static $identityMap = [];
 
     /** @var string Name of a unique db field */
     public static $idAttribute = 'id';
@@ -141,19 +141,22 @@ trait ActiveRecordTrait
     }
 
     /**
-     * Find a single record by id
+     * Get a single record by id
      * @param string|int $id
      * @param bool $asArray Return a result as array
      * @return array|null|ActiveRecord
      */
-    public static function findById($id, $asArray = false)
+    public static function getById($id, $asArray = false)
     {
         if (isset(self::$identityMap[$id])) {
             if ($asArray) {
                 return self::$identityMap[$id];
             } else {
-                $record = new static;
-                return static::populateRecord($record, self::$identityMap[$id]);
+                $model = new static;
+                /** @var ActiveRecord $modelClass */
+                $modelClass = get_class($model);
+                $modelClass::populateRecord($model, self::$identityMap[$id]);
+                return $model;
             }
         } else {
             $row = static::find()
@@ -163,5 +166,52 @@ trait ActiveRecordTrait
             static::addRowToMap($row);
             return $row;
         }
+    }
+
+    /**
+     * Get a single record by unique attribute
+     * @param string $attribute
+     * @param mixed $value
+     * @param bool $asArray
+     * @return array|null|ActiveRecord
+     */
+    public static function getByAttribute($attribute, $value, $asArray = false)
+    {
+        foreach (self::$identityMap as $item) {
+            if ($item[$attribute] === $value) {
+                if ($asArray) {
+                    return $item;
+                } else {
+                    $model = new static;
+                    /** @var ActiveRecord $modelClass */
+                    $modelClass = get_class($model);
+                    $modelClass::populateRecord($model, $item);
+                    return $model;
+                }
+            }
+        }
+        $row = static::find()
+            ->where([$attribute => $value])
+            ->asArray($asArray)
+            ->one();
+        static::addRowToMap($row);
+        return $row;
+    }
+
+    /**
+     * Get a current identity map array
+     * @return array
+     */
+    public static function getMap()
+    {
+        return self::$identityMap;
+    }
+
+    /**
+     * Clear an identity map array
+     */
+    public static function clearMap()
+    {
+        self::$identityMap = [];
     }
 }

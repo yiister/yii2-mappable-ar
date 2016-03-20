@@ -27,15 +27,15 @@
     "source": "https://github.com/yiister/yii2-mappable-ar"
   },
   "require": {
-    "php": ">=5.4.0",
+    "php": ">=5.5.0",
     "yiisoft/yii2": ">=2.0.5"
+  },
+  "require-dev": {
+    "yiisoft/yii2-codeception": "^2.0"
   },
   "autoload": {
     "psr-4": {
       "yiister\\mappable\\": ""
     }
-  },
-  "require-dev": {
-    "yiisoft/yii2-codeception": "^2.0"
   }
 }

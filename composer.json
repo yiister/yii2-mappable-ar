@@ -1,6 +1,6 @@
 {
   "name": "yiister/yii2-mappable-ar",
-  "description": "",
+  "description": "It is an extension for Yii framework 2 that gives an ability to use identity map for any ActiveRecord model.",
   "keywords": [
     "yii2",
     "utils",

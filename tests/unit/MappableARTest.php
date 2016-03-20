@@ -24,6 +24,19 @@ class MappableARTest extends \yii\codeception\TestCase
         $this->assertEquals(count(Config::getMap()), 2, '2 items in map');
     }
 
+    public function testGetByAttribute()
+    {
+        Config::clearMap();
+        $model = Config::getByAttribute('key', 'email.smtp_address');
+        $this->assertTrue($model !== null, 'Item found');
+        $this->assertTrue($model instanceof ActiveRecord, 'Item instance of ActiveRecord');
+        $this->assertEquals(count(Config::getMap()), 1, '1 item in map');
+        $model2 = Config::getByAttribute('key', 'email.smtp_address', true);
+        $this->assertTrue($model2 !== null, 'Item found');
+        $this->assertTrue(is_array($model2), 'It is array');
+        $this->assertEquals(count(Config::getMap()), 1, '1 item in map');
+    }
+
     public function testSelectCustomFields()
     {
         Config::clearMap();
@@ -47,8 +60,6 @@ class MappableARTest extends \yii\codeception\TestCase
         $model->value = 'no-reply@example.com';
         $model->save();
         $model2 = Config::getById(1);
-//        $dump = var_dump($model2, true);
-//        exit($dump);
         $this->assertEquals($model->value, $model2->value, 'Model1 equal Model2');
     }
 }

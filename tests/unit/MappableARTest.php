@@ -24,6 +24,16 @@ class MappableARTest extends \yii\codeception\TestCase
         $this->assertEquals(count(Config::getMap()), 2, '2 items in map');
     }
 
+    public function testGetAll()
+    {
+        Config::clearMap();
+        $models = Config::find()->all();
+        $this->assertEquals(count($models), 5, '5 items in map');
+        $this->assertEquals(count(Config::getMap()), 5, '5 items in map');
+        Config::clearMap();
+        $this->assertEquals(count(Config::getMap()), 0, '0 items in map');
+    }
+
     public function testGetByAttribute()
     {
         Config::clearMap();

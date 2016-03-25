@@ -19,3 +19,8 @@ modules:
             user: ''
             password: ''
             dump: tests/_data/dump.sql
+coverage:
+    enabled: true
+    include:
+        - ./ActiveQuery.php
+        - ./ActiveRecordTrait.php

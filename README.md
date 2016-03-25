@@ -3,6 +3,7 @@
 It is an extension for Yii framework 2 that gives an ability to use identity map for any ActiveRecord model.
 
 [![Build Status](https://travis-ci.org/yiister/yii2-mappable-ar.svg?branch=master)](https://travis-ci.org/yiister/yii2-mappable-ar)
+[![codecov.io](https://codecov.io/github/yiister/yii2-mappable-ar/coverage.svg?branch=master)](https://codecov.io/github/yiister/yii2-mappable-ar?branch=master)
 
 Installation
 ------------

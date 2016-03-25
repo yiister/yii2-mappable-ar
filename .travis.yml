@@ -15,12 +15,6 @@ script:
   - ~/.composer/vendor/bin/codecept build
   - ~/.composer/vendor/bin/codecept run
 
-after_script:
-  - |
-    if [ $TRAVIS_PHP_VERSION = '5.6' ]; then
-      ~/.composer/vendor/bin/codecept run --coverage --coverage-xml --coverage-html
-    fi
-
 cache:
   - vendor
   - $HOME/.composer/cache
@@ -28,5 +22,6 @@ cache:
 after_success:
   - |
     if [ $TRAVIS_PHP_VERSION = '5.6' ]; then
+      ~/.composer/vendor/bin/codecept run --coverage --coverage-xml --coverage-html
       bash <(curl -s https://codecov.io/bash)
     fi

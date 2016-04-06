@@ -20,6 +20,9 @@ trait ActiveRecordTrait
     /** @var string Name of a unique db field */
     public static $idAttribute = 'id';
 
+    /** @var int Maximum items count at identity map */
+    public static $identityMapMaxSize = -1;
+
     /**
      * Creates an [[ActiveQueryInterface]] instance for query purpose.
      *
@@ -119,6 +122,9 @@ trait ActiveRecordTrait
     {
         if ($row !== null && isset($row[self::$idAttribute])) {
             self::$identityMap[$row[self::$idAttribute]] = $row instanceof ActiveRecord ? $row->toArray() : $row;
+            if (self::$identityMapMaxSize !== -1 && count(self::$identityMap) > self::$identityMapMaxSize) {
+                array_shift(self::$identityMap);
+            }
         }
     }
 
@@ -136,6 +142,16 @@ trait ActiveRecordTrait
         } else {
             foreach ($rows as $row) {
                 self::$identityMap[$row[self::$idAttribute]] = $row;
+            }
+        }
+        if (self::$identityMapMaxSize !== -1) {
+            $count = count(self::$identityMap);
+            if ($count > self::$identityMapMaxSize) {
+                self::$identityMap = array_slice(
+                    self::$identityMap,
+                    $count - self::$identityMapMaxSize,
+                    self::$identityMapMaxSize
+                );
             }
         }
     }

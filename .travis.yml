@@ -10,18 +10,22 @@ install:
   - travis_retry composer global require fxp/composer-asset-plugin:~1.1.1
   - travis_retry composer global require --dev codeception/codeception:~2.1.0
   - travis_retry composer install --prefer-dist --dev
-
-script:
   - ~/.composer/vendor/bin/codecept build
-  - ~/.composer/vendor/bin/codecept run
+
+before_script:
+  - |
+    if [ $TRAVIS_PHP_VERSION = '5.6' ]; then
+      CODECEPT_FLAGS=" --coverage --coverage-xml"
+    fi
+script:
+  - ~/.composer/vendor/bin/codecept run --verbose $CODECEPT_FLAGS
 
 cache:
   - vendor
   - $HOME/.composer/cache
 
-after_success:
+after_script:
   - |
     if [ $TRAVIS_PHP_VERSION = '5.6' ]; then
-      ~/.composer/vendor/bin/codecept run --coverage --coverage-xml --coverage-html
       bash <(curl -s https://codecov.io/bash)
     fi

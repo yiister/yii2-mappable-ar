@@ -7,6 +7,12 @@ class MappableARTest extends \yii\codeception\TestCase
 {
     public $appConfig = '@tests/unit/_config.php';
 
+    protected function setUp()
+    {
+        Config::clearMap();
+        parent::setUp();
+    }
+
     public function testCleanMap()
     {
         $this->assertEquals(count(Config::getMap()), 0, 'No item in map');
@@ -14,7 +20,6 @@ class MappableARTest extends \yii\codeception\TestCase
 
     public function testGetById()
     {
-        Config::clearMap();
         $model = Config::getById(1);
         $this->assertTrue($model !== null, 'Item found');
         $this->assertTrue($model instanceof ActiveRecord, 'Item instance of ActiveRecord');
@@ -26,7 +31,6 @@ class MappableARTest extends \yii\codeception\TestCase
 
     public function testGetAll()
     {
-        Config::clearMap();
         $models = Config::find()->all();
         $this->assertEquals(count($models), 5, '5 items in map');
         $this->assertEquals(count(Config::getMap()), 5, '5 items in map');
@@ -36,7 +40,6 @@ class MappableARTest extends \yii\codeception\TestCase
 
     public function testGetByAttribute()
     {
-        Config::clearMap();
         $model = Config::getByAttribute('key', 'email.smtp_address');
         $this->assertTrue($model !== null, 'Item found');
         $this->assertTrue($model instanceof ActiveRecord, 'Item instance of ActiveRecord');
@@ -49,7 +52,6 @@ class MappableARTest extends \yii\codeception\TestCase
 
     public function testSelectCustomFields()
     {
-        Config::clearMap();
         $model = Config::find()->select('value')->where(['id' => 1])->one();
         $this->assertTrue($model !== null, 'Item found');
         $this->assertEquals(count(Config::getMap()), 0, 'No item in map');
@@ -57,7 +59,6 @@ class MappableARTest extends \yii\codeception\TestCase
 
     public function testFindBySql()
     {
-        Config::clearMap();
         $model = Config::findBySql('SELECT * FROM config WHERE id = 1');
         $this->assertTrue($model !== null, 'Item found');
         $this->assertEquals(count(Config::getMap()), 0, 'No item in map');
@@ -65,7 +66,6 @@ class MappableARTest extends \yii\codeception\TestCase
 
     public function testSave()
     {
-        Config::clearMap();
         $model = Config::getById(1);
         $model->value = 'no-reply@example.com';
         $model->save();

@@ -12,7 +12,7 @@ It is an extension for Yii framework 2 that gives an ability to use identity map
 How it works
 ------------
 
-`ActiveRecordTrait` overrides a `find` method `id` of model. This method creates a custom `ActiveQuery`. When `one` (`all`) method is called, a got model (models) save to `identityMap` as array of attributes (It saves a memory). The next requests return data without queries to data base.
+`ActiveRecordTrait` overrides a `find` method of model. This method creates a custom `ActiveQuery`. When `one` (`all`) method is called, a got model (models) save to `identityMap` as array of attributes (It saves a memory). The next requests return data without queries to data base.
 
 By the way the next methods are allowed:
 

@@ -4,7 +4,12 @@ Yii2 Mappable ActiveRecord Change Log
 1.1.0 under development
 -----------------------
 
-1.0.1 July 26, 2016
+1.0.2 July 17, 2016
+-------------------
+
+- Enh: Added an ability to set a primary key attribute and a maximum count of items in identity map (fps01)
+
+1.0.1 July 16, 2016
 -------------------
 
 - New #2: Added a russian documentation (fps01)

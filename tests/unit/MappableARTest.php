@@ -1,6 +1,7 @@
 <?php
 
 use data\Config;
+use data\Config2;
 use yii\db\ActiveRecord;
 
 class MappableARTest extends \yii\codeception\TestCase
@@ -27,6 +28,8 @@ class MappableARTest extends \yii\codeception\TestCase
         $row = Config::getById(2, true);
         $this->assertTrue(is_array($row), 'Item is array');
         $this->assertEquals(count(Config::getMap()), 2, '2 items in map');
+        $modelArray = Config::getById(1, true);
+        $this->assertSame($model->attributes, $modelArray);
     }
 
     public function testGetAll()
@@ -71,5 +74,26 @@ class MappableARTest extends \yii\codeception\TestCase
         $model->save();
         $model2 = Config::getById(1);
         $this->assertEquals($model->value, $model2->value, 'Model1 equal Model2');
+        $model->key = '';
+        $this->assertFalse($model->save());
+        $model = Config::getById(1);
+        $this->assertNotEmpty($model->key);
+    }
+
+    public function testAnotherId()
+    {
+        $model = Config2::getById('email.username');
+        $model2 = Config::getById($model->id);
+        $this->assertEquals($model->attributes, $model2->attributes);
+    }
+
+    public function testMaxLimit()
+    {
+        $limit = Config2::getIdentityMapMaxSize();
+        $models = Config2::find()->limit($limit + 1)->all();
+        $this->assertSame($limit + 1, count($models));
+        $this->assertSame($limit, count(Config2::getMap()));
+        Config2::find()->one();
+        $this->assertSame($limit, count(Config2::getMap()));
     }
 }

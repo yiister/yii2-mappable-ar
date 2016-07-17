@@ -12,16 +12,35 @@ use Yii;
 use yii\db\ActiveQueryInterface;
 use yii\db\ActiveRecord;
 
+/**
+ * Class ActiveRecordTrait
+ *
+ * @property string $idAttribute Name of a unique db field
+ * @property integer $identityMapMaxSize Maximum items count at identity map
+ * @package yiister\mappable
+ */
 trait ActiveRecordTrait
 {
     /** @var array List of loaded db rows. Key is a unique db field value. Value is an array of AR attributes */
     protected static $identityMap = [];
 
-    /** @var string Name of a unique db field */
-    public static $idAttribute = 'id';
+    /**
+     * Get an attribute name of primary key.
+     * @return string
+     */
+    public static function getIdAttribute()
+    {
+        return isset(static::$idAttribute) === true ? static::$idAttribute : 'id';
+    }
 
-    /** @var int Maximum items count at identity map */
-    public static $identityMapMaxSize = -1;
+    /**
+     * Get a max count of identity map items.
+     * @return integer
+     */
+    public static function getIdentityMapMaxSize()
+    {
+        return isset(static::$identityMapMaxSize) === true ? static::$identityMapMaxSize : -1;
+    }
 
     /**
      * Creates an [[ActiveQueryInterface]] instance for query purpose.
@@ -120,9 +139,10 @@ trait ActiveRecordTrait
      */
     public static function addRowToMap($row)
     {
-        if ($row !== null && isset($row[self::$idAttribute])) {
-            self::$identityMap[$row[self::$idAttribute]] = $row instanceof ActiveRecord ? $row->toArray() : $row;
-            if (self::$identityMapMaxSize !== -1 && count(self::$identityMap) > self::$identityMapMaxSize) {
+        if ($row !== null && isset($row[self::getIdAttribute()])) {
+            self::$identityMap[$row[self::getIdAttribute()]] = $row instanceof ActiveRecord ? $row->toArray() : $row;
+            $maxSize = self::getIdentityMapMaxSize();
+            if ($maxSize !== -1 && count(self::$identityMap) > $maxSize) {
                 array_shift(self::$identityMap);
             }
         }
@@ -137,20 +157,21 @@ trait ActiveRecordTrait
         $firstRow = reset($rows);
         if ($firstRow instanceof ActiveRecord) {
             foreach ($rows as $row) {
-                self::$identityMap[$row[self::$idAttribute]] = $row->toArray();
+                self::$identityMap[$row[self::getIdAttribute()]] = $row->toArray();
             }
         } else {
             foreach ($rows as $row) {
-                self::$identityMap[$row[self::$idAttribute]] = $row;
+                self::$identityMap[$row[self::getIdAttribute()]] = $row;
             }
         }
-        if (self::$identityMapMaxSize !== -1) {
+        $maxSize = self::getIdentityMapMaxSize();
+        if ($maxSize !== -1) {
             $count = count(self::$identityMap);
-            if ($count > self::$identityMapMaxSize) {
+            if ($count > $maxSize) {
                 self::$identityMap = array_slice(
                     self::$identityMap,
-                    $count - self::$identityMapMaxSize,
-                    self::$identityMapMaxSize
+                    $count - $maxSize,
+                    $maxSize
                 );
             }
         }
@@ -176,7 +197,7 @@ trait ActiveRecordTrait
             }
         } else {
             $row = static::find()
-                ->where([self::$idAttribute => $id])
+                ->where([self::getIdAttribute() => $id])
                 ->asArray($asArray)
                 ->one();
             static::addRowToMap($row);

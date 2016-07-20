@@ -17,6 +17,8 @@ class Config extends \yii\db\ActiveRecord
 {
     use ActiveRecordTrait;
 
+    public static $uniqueAttributes = ['key'];
+
     /**
      * @inheritdoc
      */

@@ -4,6 +4,11 @@ Yii2 Mappable ActiveRecord Change Log
 1.1.0 under development
 -----------------------
 
+1.0.3 July 20, 2016
+-------------------
+
+- Enh #6: Implemented a new logic of `getByAttribute` method (fps01)
+
 1.0.2 July 17, 2016
 -------------------
 

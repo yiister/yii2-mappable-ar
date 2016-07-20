@@ -45,8 +45,9 @@ Setting
 
 The extension supports the next settings:
 
-- `idAttribute` - the primary key attribute (by default `id`)
-- `identityMapMaxSize` - the maximum elements count in identityMap (by default `-1` = no limit)
+- `idAttribute` - the primary key attribute (by default `id`);
+- `identityMapMaxSize` - the maximum elements count in identityMap (by default `-1` = no limit);
+- `uniqueAttributes` - array of attribute names that contains unique values. It is used at the `getByAttribute` method.
 
 For example, for change a primary key attribute to `key` add to your model `public static $idAttribute = 'key';`.
 

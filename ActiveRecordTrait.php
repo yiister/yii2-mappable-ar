@@ -17,6 +17,7 @@ use yii\db\ActiveRecord;
  *
  * @property string $idAttribute Name of a unique db field
  * @property integer $identityMapMaxSize Maximum items count at identity map
+ * @property array $uniqueAttributes the list of attribute names for `getByAttribute` method. Each attribute must be a unique for column
  * @package yiister\mappable
  */
 trait ActiveRecordTrait
@@ -40,6 +41,18 @@ trait ActiveRecordTrait
     public static function getIdentityMapMaxSize()
     {
         return isset(static::$identityMapMaxSize) === true ? static::$identityMapMaxSize : -1;
+    }
+
+    /** @var array the conformity of a unique key to an id */
+    protected static $uniqueAttributeToId = [];
+
+    /**
+     * Get list of unique attributes. It is used as a default value
+     * @return array the empty list
+     */
+    public static function getUniqueAttributes()
+    {
+        return isset(static::$uniqueAttributes) ? static::$uniqueAttributes : [];
     }
 
     /**
@@ -139,9 +152,13 @@ trait ActiveRecordTrait
      */
     public static function addRowToMap($row)
     {
-        if ($row !== null && isset($row[self::getIdAttribute()])) {
-            self::$identityMap[$row[self::getIdAttribute()]] = $row instanceof ActiveRecord ? $row->toArray() : $row;
-            $maxSize = self::getIdentityMapMaxSize();
+        $id = static::getIdAttribute();
+        if ($row !== null && isset($row[$id])) {
+            self::$identityMap[$row[$id]] = $row instanceof ActiveRecord ? $row->toArray() : $row;
+            $maxSize = static::getIdentityMapMaxSize();
+            foreach (static::getUniqueAttributes() as $uniqueAttribute) {
+                self::$uniqueAttributeToId[$uniqueAttribute][$row[$uniqueAttribute]] = $row[$id];
+            }
             if ($maxSize !== -1 && count(self::$identityMap) > $maxSize) {
                 array_shift(self::$identityMap);
             }
@@ -155,13 +172,20 @@ trait ActiveRecordTrait
     public static function addRowsToMap($rows)
     {
         $firstRow = reset($rows);
+        $idAttribute = static::getIdAttribute();
         if ($firstRow instanceof ActiveRecord) {
             foreach ($rows as $row) {
-                self::$identityMap[$row[self::getIdAttribute()]] = $row->toArray();
+                self::$identityMap[$row[$idAttribute]] = $row->toArray();
+                foreach (static::getUniqueAttributes() as $uniqueAttribute) {
+                    self::$uniqueAttributeToId[$uniqueAttribute][$row[$uniqueAttribute]] = $row[$idAttribute];
+                }
             }
         } else {
             foreach ($rows as $row) {
-                self::$identityMap[$row[self::getIdAttribute()]] = $row;
+                self::$identityMap[$row[$idAttribute]] = $row;
+                foreach (static::getUniqueAttributes() as $uniqueAttribute) {
+                    self::$uniqueAttributeToId[$uniqueAttribute][$row[$uniqueAttribute]] = $row[$idAttribute];
+                }
             }
         }
         $maxSize = self::getIdentityMapMaxSize();
@@ -197,7 +221,7 @@ trait ActiveRecordTrait
             }
         } else {
             $row = static::find()
-                ->where([self::getIdAttribute() => $id])
+                ->where([static::getIdAttribute() => $id])
                 ->asArray($asArray)
                 ->one();
             static::addRowToMap($row);
@@ -214,18 +238,8 @@ trait ActiveRecordTrait
      */
     public static function getByAttribute($attribute, $value, $asArray = false)
     {
-        foreach (self::$identityMap as $item) {
-            if ($item[$attribute] === $value) {
-                if ($asArray) {
-                    return $item;
-                } else {
-                    $model = new static;
-                    /** @var ActiveRecord $modelClass */
-                    $modelClass = get_class($model);
-                    $modelClass::populateRecord($model, $item);
-                    return $model;
-                }
-            }
+        if (isset(self::$uniqueAttributeToId[$attribute][$value])) {
+            return static::getById(self::$uniqueAttributeToId[$attribute][$value], $asArray);
         }
         $row = static::find()
             ->where([$attribute => $value])
@@ -250,5 +264,6 @@ trait ActiveRecordTrait
     public static function clearMap()
     {
         self::$identityMap = [];
+        self::$uniqueAttributeToId = [];
     }
 }

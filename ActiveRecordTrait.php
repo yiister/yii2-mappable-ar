@@ -57,6 +57,15 @@ trait ActiveRecordTrait
 
     /**
      * Creates an [[ActiveQueryInterface]] instance for query purpose.
+     * @return ActiveQueryInterface the newly created [[ActiveQueryInterface]] instance.
+     */
+    public static function activeRecordTraitFind()
+    {
+        return Yii::createObject(ActiveQuery::className(), [get_called_class()]);
+    }
+
+    /**
+     * Creates an [[ActiveQueryInterface]] instance for query purpose.
      *
      * The returned [[ActiveQueryInterface]] instance can be further customized by calling
      * methods defined in [[ActiveQueryInterface]] before `one()` or `all()` is called to return
@@ -112,7 +121,7 @@ trait ActiveRecordTrait
      */
     public static function find()
     {
-        return Yii::createObject(ActiveQuery::className(), [get_called_class()]);
+        return static::activeRecordTraitFind();
     }
 
     /**

@@ -4,6 +4,8 @@ Yii2 Mappable ActiveRecord Change Log
 1.1.0 under development
 -----------------------
 
+- Fix #7: Fixed the bug with `find` method overriding (fps01)
+
 1.0.3 July 20, 2016
 -------------------
 

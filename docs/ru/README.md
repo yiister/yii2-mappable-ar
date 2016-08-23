@@ -50,4 +50,15 @@ composer require --prefer-dist yiister/yii2-mappable-ar
 
 Для использования расширения достаточно указать для модели `use yiister\mappable\ActiveRecordTrait;`. После этого вам станут доступны все описанные возможности.
 
-**Важно!** Если у вас переопределен метод `find`, то треит работать не будет. По этому поводу есть задача #7 на github.
+**Важно!** Если у вас переопределен метод `find`, то необходимо вызвать метод `activeRecordTraitFind()` и работать с его результатом.
+
+Пример:
+
+```php
+public static function find()
+{
+    $query = static::activeRecordTraitFind();
+    // манипуляции с query
+    return $query;
+}
+```

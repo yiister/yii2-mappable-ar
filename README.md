@@ -56,4 +56,15 @@ Using
 
 Just add `use yiister\mappable\ActiveRecordTrait;` to your model for using an identityMap. You got all features after it.
 
-**Warn!** Trait does not work if you override a `find` method in your model. This problem has a issue #7 on github.
+**Warn!** If you have overridden `find` method in your model you have to call `activeRecordTraitFind()` method and work with its result.
+
+Example:
+
+```php
+public static function find()
+{
+    $query = static::activeRecordTraitFind();
+    // another work with $query
+    return $query;
+}
+```

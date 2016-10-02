@@ -2,7 +2,7 @@
 
 /**
  * @copyright Copyright (c) 2015 Yiister
- * @license https://github.com/yiister/yii2-mappable-ar/blob/master/LICENSE
+ * @license https://github.com/yiister/yii2-mappable-ar/blob/master/LICENSE.md
  * @link https://github.com/yiister/yii2-mappable-ar
  */
 
@@ -10,6 +10,10 @@ namespace yiister\mappable;
 
 use yii\db\ActiveRecord;
 
+/**
+ * Class ActiveQuery
+ * @package yiister\mappable
+ */
 class ActiveQuery extends \yii\db\ActiveQuery
 {
     /**

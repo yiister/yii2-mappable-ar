@@ -2,18 +2,19 @@
 
 /**
  * @copyright Copyright (c) 2015 Yiister
- * @license https://github.com/yiister/yii2-mappable-ar/blob/master/LICENSE
+ * @license https://github.com/yiister/yii2-mappable-ar/blob/master/LICENSE.md
  * @link https://github.com/yiister/yii2-mappable-ar
  */
 
 namespace yiister\mappable;
 
 use Yii;
-use yii\db\ActiveQueryInterface;
 use yii\db\ActiveRecord;
 
 /**
  * Class ActiveRecordTrait
+ *
+ * @mixed ActiveRecord
  *
  * @property string $idAttribute Name of a unique db field
  * @property integer $identityMapMaxSize Maximum items count at identity map
@@ -57,7 +58,7 @@ trait ActiveRecordTrait
 
     /**
      * Creates an [[ActiveQueryInterface]] instance for query purpose.
-     * @return ActiveQueryInterface the newly created [[ActiveQueryInterface]] instance.
+     * @return ActiveQuery the newly created [[ActiveQuery]] instance.
      */
     public static function activeRecordTraitFind()
     {
@@ -117,7 +118,7 @@ trait ActiveRecordTrait
      * // SELECT FROM customer WHERE age>30
      * $customers = Customer::find()->where('age>30')->all();
      *
-     * @return ActiveQueryInterface the newly created [[ActiveQueryInterface]] instance.
+     * @return ActiveQuery the newly created [[ActiveQuery]] instance.
      */
     public static function find()
     {

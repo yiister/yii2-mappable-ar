@@ -22,5 +22,4 @@ modules:
 coverage:
     enabled: true
     include:
-        - ./ActiveQuery.php
-        - ./ActiveRecordTrait.php
+        - src/

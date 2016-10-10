@@ -4,6 +4,14 @@ Yii2 Mappable ActiveRecord Change Log
 1.1.0 under development
 -----------------------
 
+1.0.5 October 10, 2016
+----------------------
+
+- Enh #3: Implemented an identity map resorting (fps01)
+
+1.0.4 August 25, 2016
+---------------------
+
 - Fix #7: Fixed the bug with `find` method overriding (fps01)
 
 1.0.3 July 20, 2016

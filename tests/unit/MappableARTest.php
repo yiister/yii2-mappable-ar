@@ -96,4 +96,16 @@ class MappableARTest extends \yii\codeception\TestCase
         Config2::find()->one();
         $this->assertSame($limit, count(Config2::getMap()));
     }
+
+    public function testResort()
+    {
+        $model1 = Config2::getById('email.username');
+        $model2 = Config2::getById('email.password', true);
+        $model1 = Config2::getById('email.username', true);
+        $modelMap = Config2::getMap();
+        $model = array_shift($modelMap);
+        $this->assertSame($model2, $model);
+        $model = array_shift($modelMap);
+        $this->assertSame($model1, $model);
+    }
 }

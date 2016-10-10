@@ -220,6 +220,11 @@ trait ActiveRecordTrait
     public static function getById($id, $asArray = false)
     {
         if (isset(self::$identityMap[$id])) {
+            if (self::getIdentityMapMaxSize() !== -1) {
+                $row = self::$identityMap[$id];
+                unset(self::$identityMap[$id]);
+                self::$identityMap[$id] = $row;
+            }
             if ($asArray) {
                 return self::$identityMap[$id];
             } else {

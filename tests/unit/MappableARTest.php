@@ -8,6 +8,15 @@ class MappableARTest extends \yii\codeception\TestCase
 {
     public $appConfig = '@tests/unit/_config.php';
 
+    protected function getQueryCount()
+    {
+        $logger = Yii::getLogger();
+        if ($logger === null) {
+            $this->markTestSkipped('I have not a logger');
+        }
+        return $logger->getDbProfiling()[0];
+    }
+
     protected function setUp()
     {
         Config::clearMap();
@@ -26,10 +35,12 @@ class MappableARTest extends \yii\codeception\TestCase
         $this->assertTrue($model instanceof ActiveRecord, 'Item instance of ActiveRecord');
         $this->assertEquals(count(Config::getMap()), 1, '1 item in map');
         $row = Config::getById(2, true);
+        $queriesCount = $this->getQueryCount();
         $this->assertTrue(is_array($row), 'Item is array');
         $this->assertEquals(count(Config::getMap()), 2, '2 items in map');
         $modelArray = Config::getById(1, true);
         $this->assertSame($model->attributes, $modelArray);
+        $this->assertSame($queriesCount, $this->getQueryCount());
     }
 
     public function testGetAll()
@@ -73,7 +84,7 @@ class MappableARTest extends \yii\codeception\TestCase
         $model->value = 'no-reply@example.com';
         $model->save();
         $model2 = Config::getById(1);
-        $this->assertEquals($model->value, $model2->value, 'Model1 equal Model2');
+        $this->assertEquals($model->value, $model2->value, 'Model1 equals Model2');
         $model->key = '';
         $this->assertFalse($model->save());
         $model = Config::getById(1);

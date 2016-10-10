@@ -21,6 +21,8 @@ class Config2 extends \yii\db\ActiveRecord
 
     public static $identityMapMaxSize = 2;
 
+    public static $uniqueAttributes = ['key'];
+
     /**
      * @inheritdoc
      */

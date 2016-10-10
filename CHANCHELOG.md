@@ -4,6 +4,8 @@ Yii2 Mappable ActiveRecord Change Log
 1.1.0 under development
 -----------------------
 
+- Bug #4: Added new tests (fps01)
+
 1.0.5 October 10, 2016
 ----------------------
 
